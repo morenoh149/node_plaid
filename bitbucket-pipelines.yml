@@ -15,7 +15,7 @@ pipelines:
       - step:
           name: Create artifact
           script:
-            - tar --exclude='.idea' --exclude='.git' --exclude='application.tgz' -zcvf application.tgz .
+            - tar --exclude='.idea' --exclude='.git' --exclude='application.tgz' --exclude='..' -zcvf application.tgz .
           artifacts:
             - application.tgz
       - step:
