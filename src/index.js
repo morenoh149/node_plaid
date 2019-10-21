@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('./common/dotEnv_proxy');
 const express = require('express');
 const middleware = require('./middleware');
 const routes = require('./routes');
