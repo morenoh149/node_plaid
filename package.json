@@ -1,0 +1,38 @@
+{
+  "name": "ch_pl_saleforce",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "mocha $(find test -name '*.js')",
+    "coverage": "nyc npm test",
+    "coverage:report": "nyc npm test && nyc report --reporter=lcov"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/TrueHollow/ch_pl_saleforce.git"
+  },
+  "author": "Anatoly Russkih <titanofdarkness@gmail.com>",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/TrueHollow/ch_pl_saleforce#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "ejs": "^2.7.1",
+    "express": "^4.17.1",
+    "log4js": "^5.2.2"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "eslint": "^6.5.1",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-config-prettier": "^6.4.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-prettier": "^3.1.1",
+    "mocha": "^6.2.2",
+    "nyc": "^14.1.1",
+    "prettier": "^1.18.2"
+  }
+}

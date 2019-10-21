@@ -1,0 +1,29 @@
+# -----
+# You can specify a custom docker image from Docker Hub as your build environment.
+image: node:10
+# http://dokku.viewdocs.io/dokku/deployment/application-deployment/
+pipelines:
+  branches:
+    master:
+      - step:
+          name: Run tests
+          caches:
+            - node
+          script:
+            - npm install
+            - npm test
+      - step:
+          name: Create artifact
+          script:
+            - tar --exclude='.idea' --exclude='.git' --exclude='application.tgz' -zcvf application.tgz .
+          artifacts:
+            - application.tgz
+      - step:
+          name: Deploy to heroku
+          deployment: production
+          script:
+            - pipe: atlassian/heroku-deploy:0.1.1
+              variables:
+                HEROKU_API_KEY: $HEROKU_API_KEY
+                HEROKU_APP_NAME: $HEROKU_APP_NAME
+                ZIP_FILE: "application.tgz"
