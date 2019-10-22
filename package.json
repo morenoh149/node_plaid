@@ -23,6 +23,7 @@
     "ejs": "^2.7.1",
     "express": "^4.17.1",
     "log4js": "^5.2.2",
+    "moment": "^2.24.0",
     "plaid": "^4.3.0"
   },
   "devDependencies": {
