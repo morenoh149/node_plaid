@@ -2,17 +2,21 @@ const path = require('path');
 const plaid = require('plaid');
 const moment = require('moment');
 const logger = require('../common/Logger')('src/routes/index.js');
+const SalesfoceProvider = require('../service/SalesfoceProvider');
 
-const { PLAID_CLIENT_ID } = process.env;
-const { PLAID_SECRET } = process.env;
-const { PLAID_PUBLIC_KEY } = process.env;
-const { PLAID_ENV } = process.env;
+const salesProvider = new SalesfoceProvider();
+salesProvider.connect().then(() => {
+  logger.info('Connection to salesforce established.');
+});
 
-const { PLAID_PRODUCTS } = process.env;
-
-// PLAID_PRODUCTS is a comma-separated list of countries for which users
-// will be able to select institutions from.
-const { PLAID_COUNTRY_CODES } = process.env;
+const {
+  PLAID_CLIENT_ID,
+  PLAID_SECRET,
+  PLAID_PUBLIC_KEY,
+  PLAID_ENV,
+  PLAID_PRODUCTS,
+  PLAID_COUNTRY_CODES,
+} = process.env;
 
 const respondWithAssetReport = (
   numRetriesRemaining,
@@ -170,7 +174,7 @@ module.exports = app => {
 
   app.get('/balance/:access_token', (req, res) => {
     const { access_token } = req.params;
-    client.getBalance(access_token, (error, balanceResponse) => {
+    client.getBalance(access_token, async (error, balanceResponse) => {
       if (error != null) {
         logger.warn(error);
         return res.json({
@@ -178,6 +182,7 @@ module.exports = app => {
         });
       }
       logger.debug(balanceResponse);
+      await salesProvider.balanceData(balanceResponse);
       return res.json({ balance: balanceResponse });
     });
   });
