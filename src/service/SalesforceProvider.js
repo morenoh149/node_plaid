@@ -1,9 +1,9 @@
 const jsforce = require('jsforce');
-const logger = require('../common/Logger')('src/service/SalesfoceProvider.js');
+const logger = require('../common/Logger')('src/service/SalesforceProvider.js');
 
 const { SALESFORCE_USERNAME, SALESFORCE_PASSWORD } = process.env;
 
-class SalesfoceProvider {
+class SalesforceProvider {
   constructor(options = {}) {
     this.conn = new jsforce.Connection(options);
   }
@@ -61,4 +61,4 @@ class SalesfoceProvider {
   }
 }
 
-module.exports = SalesfoceProvider;
+module.exports = SalesforceProvider;
