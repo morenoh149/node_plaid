@@ -272,9 +272,7 @@ class PlaidProvider {
             return reject(error);
           }
           logger.debug(assetReportCreateResponse);
-          const assetReportToken = assetReportCreateResponse.asset_report_token;
-          return reject(assetReportToken);
-          // return respondWithAssetReport(20, assetReportToken, client, res);
+          return resolve(assetReportCreateResponse);
         }
       );
     });

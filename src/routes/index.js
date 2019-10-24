@@ -154,7 +154,6 @@ module.exports = app => {
         assetReportToken
       );
       const result = {
-        error: null,
         json: assetReportGetResponse.report,
         pdf: assetReportGetPdfResponse.buffer.toString('base64'),
       };
