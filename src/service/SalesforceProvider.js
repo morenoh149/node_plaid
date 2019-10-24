@@ -1,7 +1,11 @@
 const jsforce = require('jsforce');
 const logger = require('../common/Logger')('src/service/SalesforceProvider.js');
 
-const { SALESFORCE_USERNAME, SALESFORCE_PASSWORD } = process.env;
+const {
+  SALESFORCE_USERNAME,
+  SALESFORCE_PASSWORD,
+  SALESFORCE_SECURITY_TOKEN,
+} = process.env;
 
 class SalesforceProvider {
   constructor(options = {}) {
@@ -16,17 +20,18 @@ class SalesforceProvider {
    */
   async connect() {
     return new Promise((resolve, reject) => {
-      this.conn.login(
+      const { conn } = this;
+      conn.login(
         SALESFORCE_USERNAME,
-        SALESFORCE_PASSWORD,
+        SALESFORCE_PASSWORD + SALESFORCE_SECURITY_TOKEN,
         (err, userInfo) => {
           if (err) {
             return reject(err);
           }
           // Now you can get the access token and instance URL information.
           // Save them to establish connection next time.
-          logger.log(this.conn.accessToken);
-          logger.log(this.conn.instanceUrl);
+          logger.log(`Access token: ${conn.accessToken}`);
+          logger.log(`Instance url: ${conn.instanceUrl}`);
           // logged in user property
           logger.log(`User ID: ${userInfo.id}`);
           logger.log(`Org ID: ${userInfo.organizationId}`);
