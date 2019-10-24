@@ -153,6 +153,7 @@ module.exports = app => {
       const assetReportGetPdfResponse = await plaidProvider.getAssetReportPdf(
         assetReportToken
       );
+      await salesProvider.pushAssetsData(assetReportGetResponse);
       const result = {
         json: assetReportGetResponse.report,
         pdf: assetReportGetPdfResponse.buffer.toString('base64'),

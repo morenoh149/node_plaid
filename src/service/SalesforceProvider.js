@@ -64,6 +64,29 @@ class SalesforceProvider {
       });
     });
   }
+
+  /**
+   * Push new data to salesforce
+   * @param assetReportGetResponse
+   * @returns {Promise<object>}
+   */
+  async pushAssetsData(assetReportGetResponse) {
+    const { report } = assetReportGetResponse;
+    const data = {
+      asset_report_id__c: report.asset_report_id,
+      client_report_id__c: report.client_report_id,
+      date_generated__c: report.date_generated,
+      days_requested__c: report.days_requested,
+    };
+    return new Promise((resolve, reject) => {
+      this.conn.sobject('Asset__c').create(data, (err, ret) => {
+        if (err) {
+          return reject(err);
+        }
+        return resolve(ret);
+      });
+    });
+  }
 }
 
 module.exports = SalesforceProvider;
