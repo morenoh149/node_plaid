@@ -1,6 +1,8 @@
 const logger = require('../common/Logger')('src/routes/index.js');
 const SalesforceProvider = require('../service/SalesforceProvider');
 const PlaidProvider = require('../service/PlaidProvider');
+const ejsRoutes = require('./ejsRoutes');
+const uploadRoute = require('./uploadRoute');
 
 const salesProvider = new SalesforceProvider();
 salesProvider.connect().then(() => {
@@ -10,6 +12,8 @@ salesProvider.connect().then(() => {
 const plaidProvider = new PlaidProvider();
 
 module.exports = app => {
+  ejsRoutes(app);
+  uploadRoute(app);
   app.post('/get_access_token', async (req, res) => {
     try {
       const token = req.body.public_token;
@@ -113,6 +117,27 @@ module.exports = app => {
       const result = await plaidProvider.getInvestmentsTransactions(
         accessToken
       );
+      res.json(result);
+    } catch (e) {
+      logger.error(e);
+      res.status(500).json({ error: e });
+    }
+  });
+
+  app.get('/assets/data/:accessToken', async (req, res) => {
+    try {
+      const { accessToken } = req.params;
+      const assetReportCreateResponse = await plaidProvider.getAssets(
+        accessToken
+      );
+      const assetReportToken = assetReportCreateResponse.asset_report_token;
+      const assetReportGetResponse = await plaidProvider.tryToGetAssetReport(
+        assetReportToken
+      );
+      await salesProvider.pushAssetsData(assetReportGetResponse);
+      const result = {
+        json: assetReportGetResponse.report,
+      };
       res.json(result);
     } catch (e) {
       logger.error(e);

@@ -25,7 +25,7 @@ module.exports = app => {
 
   app.get('/', (req, res) => {
     res.render('index', {
-      title: 'Prototype',
+      title: 'Prototype: Plaid to Salesforce',
       PLAID_PUBLIC_KEY,
       PLAID_ENV,
       PLAID_PRODUCTS,

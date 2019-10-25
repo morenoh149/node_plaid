@@ -1,10 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
+<div class="container">
+    <div class="row">
+        <h1 class="text-center"><%= title %></h1>
+    </div>
+    <div class="row">
+        <p>This is prototype. <a href="/api">Check all api endpoints</a></p>
+    </div>
+    <div class="row">
+        <button id="link-btn" type="button" class="btn btn-primary btn-lg">Connect with Plaid</button>
+    </div>
+    <div class="row">
+        <form action="/upload" enctype="multipart/form-data" method="post">
+            <div class="form-group">
+                <label for="uploadDocumentControl">Upload documents to Salesforce (not working yet)</label>
+                <input type="file" class="form-control-file" id="uploadDocumentControl" multiple name="userDocuments">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Send</button>
+            </div>
+        </form>
+    </div>
+</div>
 
+<script
+        src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
+<script>
+  ($ => {
+    const postAjax = async (url, data) => {
+      return new Promise((resolve, reject) => {
+        $.post(url, data).done(resolve).fail(reject);
+      })
+    }
+    const getAjax = async url => {
+      return new Promise((resolve, reject) => {
+        $.get(url).done(resolve).fail(reject);
+      })
+    }
+
+    const products = '<%= PLAID_PRODUCTS %>'.split(',');
+    const handler = Plaid.create({
+      apiVersion: 'v2',
+      clientName: 'Plaid Quickstart',
+      env: '<%= PLAID_ENV %>',
+      product: products,
+      key: '<%= PLAID_PUBLIC_KEY %>',
+      countryCodes: '<%= PLAID_COUNTRY_CODES %>'.split(','),
+      // webhook: 'https://your-domain.tld/plaid-webhook',
+      onSuccess: async public_token => {
+        const data = await postAjax('/get_access_token', {
+          public_token: public_token
+        });
+        const access_token = data.access_token;
+        const assetsResult = await getAjax(`/assets/data/${access_token}`);
+        console.log(assetsResult);
+      },
+    });
+    $('#link-btn').on('click', function(e) {
+      handler.open();
+    });
+  })(jQuery);
+</script>
 </body>
 </html>
