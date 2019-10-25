@@ -87,7 +87,7 @@ class SalesforceProvider {
       days_requested__c: report.days_requested,
     };
     return new Promise((resolve, reject) => {
-      this.conn.sobject('Plaid_Asset__c').create(data, (err, ret) => {
+      this.conn.sobject('Plaid_Report__c').create(data, (err, ret) => {
         if (err) {
           return reject(err);
         }
