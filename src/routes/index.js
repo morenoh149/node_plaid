@@ -1,4 +1,3 @@
-const path = require('path');
 const logger = require('../common/Logger')('src/routes/index.js');
 const SalesforceProvider = require('../service/SalesforceProvider');
 const PlaidProvider = require('../service/PlaidProvider');
@@ -10,26 +9,7 @@ salesProvider.connect().then(() => {
 
 const plaidProvider = new PlaidProvider();
 
-const {
-  PLAID_PUBLIC_KEY,
-  PLAID_ENV,
-  PLAID_PRODUCTS,
-  PLAID_COUNTRY_CODES,
-} = process.env;
-
 module.exports = app => {
-  const SRC_ROOT = path.resolve(__dirname, '..');
-  app.set('views', path.join(SRC_ROOT, 'views'));
-  app.set('view engine', 'ejs');
-  app.get('/', (req, res) => {
-    res.render('index', {
-      title: 'Prototype',
-      PLAID_PUBLIC_KEY,
-      PLAID_ENV,
-      PLAID_PRODUCTS,
-      PLAID_COUNTRY_CODES,
-    });
-  });
   app.post('/get_access_token', async (req, res) => {
     try {
       const token = req.body.public_token;
@@ -150,10 +130,10 @@ module.exports = app => {
       const assetReportGetResponse = await plaidProvider.tryToGetAssetReport(
         assetReportToken
       );
-      const assetReportGetPdfResponse = await plaidProvider.getAssetReportPdf(
-        assetReportToken
-      );
-      await salesProvider.pushAssetsData(assetReportGetResponse);
+      const [assetReportGetPdfResponse] = await Promise.all([
+        plaidProvider.getAssetReportPdf(assetReportToken),
+        salesProvider.pushAssetsData(assetReportGetResponse),
+      ]);
       const result = {
         json: assetReportGetResponse.report,
         pdf: assetReportGetPdfResponse.buffer.toString('base64'),

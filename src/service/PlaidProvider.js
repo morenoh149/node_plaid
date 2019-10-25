@@ -1,13 +1,24 @@
 const plaid = require('plaid');
 const moment = require('moment');
+const env = require('env-var');
 const logger = require('../common/Logger')('src/service/PlaidProvider.js');
 
-const {
-  PLAID_CLIENT_ID,
-  PLAID_SECRET,
-  PLAID_PUBLIC_KEY,
-  PLAID_ENV,
-} = process.env;
+const PLAID_CLIENT_ID = env
+  .get('PLAID_CLIENT_ID')
+  .required()
+  .asString();
+const PLAID_SECRET = env
+  .get('PLAID_SECRET')
+  .required()
+  .asString();
+const PLAID_PUBLIC_KEY = env
+  .get('PLAID_PUBLIC_KEY')
+  .required()
+  .asString();
+const PLAID_ENV = env
+  .get('PLAID_ENV')
+  .required()
+  .asString();
 
 const MAX_ATTEMP_COUNT = 20;
 const ASSET_REPORT_INCLUDE_INSIGHT = false;

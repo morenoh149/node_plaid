@@ -1,11 +1,19 @@
 const jsforce = require('jsforce');
+const env = require('env-var');
 const logger = require('../common/Logger')('src/service/SalesforceProvider.js');
 
-const {
-  SALESFORCE_USERNAME,
-  SALESFORCE_PASSWORD,
-  SALESFORCE_SECURITY_TOKEN,
-} = process.env;
+const SALESFORCE_USERNAME = env
+  .get('SALESFORCE_USERNAME')
+  .required()
+  .asString();
+const SALESFORCE_PASSWORD = env
+  .get('SALESFORCE_PASSWORD')
+  .required()
+  .asString();
+const SALESFORCE_SECURITY_TOKEN = env
+  .get('SALESFORCE_SECURITY_TOKEN')
+  .required()
+  .asString();
 
 class SalesforceProvider {
   constructor(options = {}) {
