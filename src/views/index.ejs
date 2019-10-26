@@ -9,14 +9,23 @@
 </head>
 <body>
 <div class="container">
+    <ul class="nav">
+        <li class="nav-item">
+            <a class="nav-link active" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/api">Api</a>
+        </li>
+    </ul>
     <div class="row">
         <h1 class="text-center"><%= title %></h1>
     </div>
     <div class="row">
-        <p>This is prototype. <a href="/api">Check all api endpoints</a></p>
+        <button id="link-btn" type="button" class="btn btn-primary btn-lg">Connect with Plaid</button>
     </div>
     <div class="row">
-        <button id="link-btn" type="button" class="btn btn-primary btn-lg">Connect with Plaid</button>
+        <div id="plaidResult" role="alert">
+        </div>
     </div>
     <div class="row">
         <form action="/upload" enctype="multipart/form-data" method="post">
@@ -54,6 +63,7 @@
         $.get(url).done(resolve).fail(reject);
       })
     }
+    const elResult = $('#plaidResult');
 
     const products = '<%= PLAID_PRODUCTS %>'.split(',');
     const handler = Plaid.create({
@@ -67,9 +77,17 @@
       onSuccess: async public_token => {
         const assetsResult = await getAjax(`/assets/data/${public_token}`);
         console.log(assetsResult);
+        if (elResult.error) {
+          elResult.addClass("alert alert-danger");
+          elResult.text('Unexpected error.');
+        } else {
+          elResult.addClass("alert alert-success");
+          elResult.text('Plaid data was successfully pushed to Salesforce.');
+        }
       },
     });
     $('#link-btn').on('click', function(e) {
+      elResult.removeClass();
       handler.open();
     });
   })(jQuery);
