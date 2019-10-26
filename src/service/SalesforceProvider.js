@@ -95,6 +95,34 @@ class SalesforceProvider {
       });
     });
   }
+
+  /**
+   * Upload file as attachment
+   * @param {string} ParentId
+   * @param {string} fileName
+   * @param {Buffer} buffer
+   * @param {string} ContentType
+   * @returns {Promise<Object>}
+   */
+  async uploadFileAsAttachment(ParentId, fileName, buffer, ContentType) {
+    const base64data = buffer.toString('base64');
+    return new Promise((resolve, reject) => {
+      this.conn.sobject('Attachment').create(
+        {
+          ParentId,
+          Name: fileName,
+          Body: base64data, // Base64
+          ContentType,
+        },
+        (err, uploadedAttachment) => {
+          if (err) {
+            return reject(err);
+          }
+          return resolve(uploadedAttachment);
+        }
+      );
+    });
+  }
 }
 
 module.exports = SalesforceProvider;

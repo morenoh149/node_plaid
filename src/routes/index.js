@@ -124,9 +124,11 @@ module.exports = app => {
     }
   });
 
-  app.get('/assets/data/:accessToken', async (req, res) => {
+  app.get('/assets/data/:publicToken', async (req, res) => {
     try {
-      const { accessToken } = req.params;
+      const { publicToken } = req.params;
+      const authResult = await plaidProvider.getAccessToken(publicToken);
+      const accessToken = authResult.access_token;
       const assetReportCreateResponse = await plaidProvider.getAssets(
         accessToken
       );
@@ -134,7 +136,17 @@ module.exports = app => {
       const assetReportGetResponse = await plaidProvider.tryToGetAssetReport(
         assetReportToken
       );
-      await salesProvider.pushAssetsData(assetReportGetResponse);
+      const [ret, assetReportGetPdfResponse] = await Promise.all([
+        salesProvider.pushAssetsData(assetReportGetResponse),
+        plaidProvider.getAssetReportPdf(assetReportToken),
+      ]);
+      // https://github.com/jsforce/jsforce/issues/43
+      await salesProvider.uploadFileAsAttachment(
+        ret.id,
+        'AssetsReport.pdf',
+        assetReportGetPdfResponse.buffer,
+        'application/pdf'
+      );
       const result = {
         json: assetReportGetResponse.report,
       };
