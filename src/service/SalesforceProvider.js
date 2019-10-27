@@ -3,6 +3,8 @@ const env = require('env-var');
 const Report = require('./models/Report');
 const Account = require('./models/Account');
 const HistoricalBalance = require('./models/HistoricalBalance');
+const Owner = require('./models/Owner');
+const Transaction = require('./models/Transaction');
 const logger = require('../common/Logger')('src/service/SalesforceProvider.js');
 
 const SALESFORCE_USERNAME = env
@@ -101,7 +103,7 @@ class SalesforceProvider {
   }
 
   /**
-   * Push accounts data to Salesforce
+   * Push balances data to Salesforce
    * @param assetReportGetResponse
    * @returns {Promise<Object>}
    */
@@ -119,6 +121,59 @@ class SalesforceProvider {
       this.conn
         .sobject('Plaid_Historical__c')
         .create(hBalancesArr, (err, ret) => {
+          if (err) {
+            return reject(err);
+          }
+          return resolve(ret);
+        });
+    });
+  }
+
+  /**
+   * Push owners data to Salesforce
+   * @param assetReportGetResponse
+   * @returns {Promise<Object>}
+   */
+  async pushOwnersData(assetReportGetResponse) {
+    const { report } = assetReportGetResponse;
+    const { items } = report;
+    const ownersArr = items
+      .map(item => {
+        const { accounts } = item;
+        const owners = accounts.map(acc => new Owner(acc));
+        return owners.map(o => o.Owners).flat(1);
+      })
+      .flat(1);
+    return new Promise((resolve, reject) => {
+      this.conn
+        .sobject('Plaid_Account_Owner__c')
+        .create(ownersArr, (err, ret) => {
+          if (err) {
+            return reject(err);
+          }
+          return resolve(ret);
+        });
+    });
+  }
+
+  /**
+   * Push transactions data to Salesforce
+   * @param assetReportGetResponse
+   * @returns {Promise<Object>}
+   */
+  async pushTransactionData(assetReportGetResponse) {
+    const { report } = assetReportGetResponse;
+    const { items } = report;
+    const transactionArr = items
+      .map(item => {
+        const { accounts } = item;
+        return accounts.map(acc => acc.transactions.map(t => new Transaction(t))).flat(1);
+      })
+      .flat(1);
+    return new Promise((resolve, reject) => {
+      this.conn
+        .sobject('Plaid_Transaction__c')
+        .create(transactionArr, (err, ret) => {
           if (err) {
             return reject(err);
           }
