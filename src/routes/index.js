@@ -5,7 +5,6 @@ const Backend = require('../service/Backend');
 
 const salesProvider = Backend.SalesProvider;
 const plaidProvider = Backend.PlaidProvider;
-Backend.init().then(() => logger.info('Backend ready.'));
 
 module.exports = app => {
   ejsRoutes(app);
@@ -136,6 +135,7 @@ module.exports = app => {
         salesProvider.pushReportData(assetReportGetResponse),
         plaidProvider.getAssetReportPdf(assetReportToken),
         salesProvider.pushAccountData(assetReportGetResponse),
+        salesProvider.pushHisoricalBalanceData(assetReportGetResponse),
       ]);
       // https://github.com/jsforce/jsforce/issues/43
       await salesProvider.uploadFileAsAttachment(

@@ -40,5 +40,6 @@ class Backend {
 }
 
 const singleton = new Backend();
+singleton.init().then(() => logger.info('Backend ready.'));
 
 module.exports = singleton;

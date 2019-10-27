@@ -2,6 +2,7 @@ const jsforce = require('jsforce');
 const env = require('env-var');
 const Report = require('./models/Report');
 const Account = require('./models/Account');
+const HistoricalBalance = require('./models/HistoricalBalance');
 const logger = require('../common/Logger')('src/service/SalesforceProvider.js');
 
 const SALESFORCE_USERNAME = env
@@ -75,6 +76,11 @@ class SalesforceProvider {
     });
   }
 
+  /**
+   * Push accounts data to Salesforce
+   * @param assetReportGetResponse
+   * @returns {Promise<Object>}
+   */
   async pushAccountData(assetReportGetResponse) {
     const { report } = assetReportGetResponse;
     const { items } = report;
@@ -91,6 +97,33 @@ class SalesforceProvider {
         }
         return resolve(ret);
       });
+    });
+  }
+
+  /**
+   * Push accounts data to Salesforce
+   * @param assetReportGetResponse
+   * @returns {Promise<Object>}
+   */
+  async pushHisoricalBalanceData(assetReportGetResponse) {
+    const { report } = assetReportGetResponse;
+    const { items } = report;
+    const hBalancesArr = items
+      .map(item => {
+        const { accounts } = item;
+        const balances = accounts.map(acc => new HistoricalBalance(acc));
+        return balances.map(b => b.Balances).flat(1);
+      })
+      .flat(1);
+    return new Promise((resolve, reject) => {
+      this.conn
+        .sobject('Plaid_Historical__c')
+        .create(hBalancesArr, (err, ret) => {
+          if (err) {
+            return reject(err);
+          }
+          return resolve(ret);
+        });
     });
   }
 
