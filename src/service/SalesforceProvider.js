@@ -1,5 +1,7 @@
 const jsforce = require('jsforce');
 const env = require('env-var');
+const Report = require('./models/Report');
+const Account = require('./models/Account');
 const logger = require('../common/Logger')('src/service/SalesforceProvider.js');
 
 const SALESFORCE_USERNAME = env
@@ -73,26 +75,41 @@ class SalesforceProvider {
     });
   }
 
-  /**
-   * Push new data to salesforce
-   * @param assetReportGetResponse
-   * @returns {Promise<object>}
-   */
-  async pushAssetsData(assetReportGetResponse) {
+  async pushAccountData(assetReportGetResponse) {
     const { report } = assetReportGetResponse;
-    const data = {
-      asset_report_id__c: report.asset_report_id,
-      client_report_id__c: report.client_report_id,
-      date_generated__c: report.date_generated,
-      days_requested__c: report.days_requested,
-    };
+    const { items } = report;
+    const accountsArr = items
+      .map(item => {
+        const { accounts } = item;
+        return accounts.map(acc => new Account(acc));
+      })
+      .flat(1);
     return new Promise((resolve, reject) => {
-      this.conn.sobject('Plaid_Report__c').create(data, (err, ret) => {
+      this.conn.sobject('Plaid_Account__c').create(accountsArr, (err, ret) => {
         if (err) {
           return reject(err);
         }
         return resolve(ret);
       });
+    });
+  }
+
+  /**
+   * Push new data to salesforce
+   * @param assetReportGetResponse
+   * @returns {Promise<object>}
+   */
+  async pushReportData(assetReportGetResponse) {
+    const { report } = assetReportGetResponse;
+    return new Promise((resolve, reject) => {
+      this.conn
+        .sobject('Plaid_Report__c')
+        .create(Report.getReport(report), (err, ret) => {
+          if (err) {
+            return reject(err);
+          }
+          return resolve(ret);
+        });
     });
   }
 

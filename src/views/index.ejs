@@ -31,6 +31,7 @@
             <button id="link-btn" type="button" class="btn btn-primary btn-lg">Connect with Plaid</button>
         </div>
     </div>
+    <hr >
     <div class="row">
         <div class="col">
             <div id="plaidResult" role="alert"></div>
@@ -93,6 +94,12 @@
     const elResult = $('#plaidResult');
 
     const products = '<%= PLAID_PRODUCTS %>'.split(',');
+    const infoAlert = (str, classStr) => {
+      elResult.removeClass().text();
+      if (str) {
+        elResult.addClass(classStr).text(str);
+      }
+    }
     const handler = Plaid.create({
       apiVersion: 'v2',
       clientName: 'Plaid Quickstart',
@@ -102,19 +109,30 @@
       countryCodes: '<%= PLAID_COUNTRY_CODES %>'.split(','),
       // webhook: 'https://your-domain.tld/plaid-webhook',
       onSuccess: async public_token => {
-        const assetsResult = await getAjax(`/assets/data/${public_token}`);
-        console.log(assetsResult);
-        if (elResult.error) {
-          elResult.addClass("alert alert-danger");
-          elResult.text('Unexpected error.');
-        } else {
-          elResult.addClass("alert alert-success");
-          elResult.text('Plaid data was successfully pushed to Salesforce.');
+        try {
+          infoAlert('Sending data to Salesforce.', 'alert alert-info')
+          const assetsResult = await getAjax(`/assets/data/${public_token}`);
+          console.log(assetsResult);
+          if (assetsResult.error) {
+            infoAlert('Unexpected error.', 'alert alert-danger');
+          } else {
+            infoAlert('Plaid data was successfully pushed to Salesforce.', 'alert alert-success');
+          }
+        } catch (e) {
+          console.error(e);
+          infoAlert('Unexpected error.', 'alert alert-danger');
         }
       },
+      onExit: (err, metadata) => {
+        if (err) {
+          console.error(e);
+          infoAlert('Unexpected error.', 'alert alert-danger');
+        } else {
+          infoAlert('You must finish Plaid auth process.', 'alert alert-info');
+        }
+      }
     });
     $('#link-btn').on('click', function(e) {
-      elResult.removeClass();
       handler.open();
     });
   })(jQuery);

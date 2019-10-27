@@ -133,8 +133,9 @@ module.exports = app => {
         assetReportToken
       );
       const [ret, assetReportGetPdfResponse] = await Promise.all([
-        salesProvider.pushAssetsData(assetReportGetResponse),
+        salesProvider.pushReportData(assetReportGetResponse),
         plaidProvider.getAssetReportPdf(assetReportToken),
+        salesProvider.pushAccountData(assetReportGetResponse),
       ]);
       // https://github.com/jsforce/jsforce/issues/43
       await salesProvider.uploadFileAsAttachment(
@@ -165,7 +166,7 @@ module.exports = app => {
       );
       const [assetReportGetPdfResponse] = await Promise.all([
         plaidProvider.getAssetReportPdf(assetReportToken),
-        salesProvider.pushAssetsData(assetReportGetResponse),
+        salesProvider.pushReportData(assetReportGetResponse),
       ]);
       const result = {
         json: assetReportGetResponse.report,

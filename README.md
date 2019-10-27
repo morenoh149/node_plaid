@@ -2,7 +2,7 @@
 
 ## System requirements:
 
-Node.js version 10 or higher. 
+Node.js version 12 or higher. 
 
 ## Prepare
 
