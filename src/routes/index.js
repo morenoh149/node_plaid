@@ -1,15 +1,11 @@
 const logger = require('../common/Logger')('src/routes/index.js');
-const SalesforceProvider = require('../service/SalesforceProvider');
-const PlaidProvider = require('../service/PlaidProvider');
 const ejsRoutes = require('./ejsRoutes');
 const uploadRoute = require('./uploadRoute');
+const Backend = require('../service/Backend');
 
-const salesProvider = new SalesforceProvider();
-salesProvider.connect().then(() => {
-  logger.info('Connection to salesforce established.');
-});
-
-const plaidProvider = new PlaidProvider();
+const salesProvider = Backend.SalesProvider;
+const plaidProvider = Backend.PlaidProvider;
+Backend.init().then(() => logger.info('Backend ready.'));
 
 module.exports = app => {
   ejsRoutes(app);

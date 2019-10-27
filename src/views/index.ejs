@@ -20,21 +20,34 @@
     <div class="row">
         <h1 class="text-center"><%= title %></h1>
     </div>
+    <hr >
     <div class="row">
-        <button id="link-btn" type="button" class="btn btn-primary btn-lg">Connect with Plaid</button>
-    </div>
-    <div class="row">
-        <div id="plaidResult" role="alert">
+        <div class="col">
+            <p>Connect your assets using Plaid and upload data to Salesforce</p>
         </div>
     </div>
     <div class="row">
+        <div class="col">
+            <button id="link-btn" type="button" class="btn btn-primary btn-lg">Connect with Plaid</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div id="plaidResult" role="alert"></div>
+        </div>
+    </div>
+    <hr >
+    <div style="display: none;" id="uploadManualBlock">
         <form action="/upload" enctype="multipart/form-data" method="post">
-            <div class="form-group">
-                <label for="uploadDocumentControl">Upload documents to Salesforce (not working yet)</label>
-                <input type="file" class="form-control-file" id="uploadDocumentControl" multiple name="userDocuments">
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary">Send</button>
+            <div class="form-row">
+                <div class="form-group col">
+                    <label for="uploadDocumentControl">Upload documents to Salesforce (Up to 3 files with max size 5Mb)</label>
+                    <input type="file" class="form-control-file" id="uploadDocumentControl" multiple name="userDocuments">
+                    <input type="hidden" name="user_id" value="">
+                </div>
+                <div class="form-group col">
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                </div>
             </div>
         </form>
     </div>
@@ -53,6 +66,20 @@
 <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
 <script>
   ($ => {
+    function getParameterByName(name, url) {
+      if (!url) url = window.location.href;
+      name = name.replace(/[\[\]]/g, '\\$&');
+      var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+        results = regex.exec(url);
+      if (!results) return null;
+      if (!results[2]) return '';
+      return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+    const userId = getParameterByName('user_id');
+    if (typeof userId === 'string' && userId.length) {
+      $('#uploadManualBlock').show();
+      $('input[name ="user_id"]').val(userId);
+    }
     const postAjax = async (url, data) => {
       return new Promise((resolve, reject) => {
         $.post(url, data).done(resolve).fail(reject);

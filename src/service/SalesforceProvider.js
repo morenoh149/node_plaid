@@ -97,17 +97,45 @@ class SalesforceProvider {
   }
 
   /**
+   * Create manual upload object for user_id
+   * @param {string} userId
+   * @returns {Promise<Object>}
+   */
+  async createManualUploadObject(userId) {
+    return new Promise((resolve, reject) => {
+      this.conn.sobject('Plaid_User_File__c').create(
+        {
+          user_id__c: userId,
+        },
+        (err, ret) => {
+          if (err) {
+            return reject(err);
+          }
+          return resolve(ret);
+        }
+      );
+    });
+  }
+
+  /**
    * Upload file as attachment
    * @param {string} ParentId
    * @param {string} fileName
    * @param {Buffer} buffer
    * @param {string} ContentType
+   * @param {string} [ObjectType=Attachment]
    * @returns {Promise<Object>}
    */
-  async uploadFileAsAttachment(ParentId, fileName, buffer, ContentType) {
+  async uploadFileAsAttachment(
+    ParentId,
+    fileName,
+    buffer,
+    ContentType,
+    ObjectType = 'Attachment'
+  ) {
     const base64data = buffer.toString('base64');
     return new Promise((resolve, reject) => {
-      this.conn.sobject('Attachment').create(
+      this.conn.sobject(ObjectType).create(
         {
           ParentId,
           Name: fileName,
