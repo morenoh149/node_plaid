@@ -135,7 +135,7 @@ module.exports = app => {
         salesProvider.pushReportData(assetReportGetResponse),
         plaidProvider.getAssetReportPdf(assetReportToken),
         salesProvider.pushAccountData(assetReportGetResponse),
-        salesProvider.pushHisoricalBalanceData(assetReportGetResponse),
+        salesProvider.pushHistoricalBalanceData(assetReportGetResponse),
         salesProvider.pushOwnersData(assetReportGetResponse),
         salesProvider.pushTransactionData(assetReportGetResponse),
       ]);

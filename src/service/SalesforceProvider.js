@@ -83,7 +83,7 @@ class SalesforceProvider {
    * @param assetReportGetResponse
    * @returns {Promise<Object>}
    */
-  async pushHisoricalBalanceData(assetReportGetResponse) {
+  async pushHistoricalBalanceData(assetReportGetResponse) {
     const { report } = assetReportGetResponse;
     const { items } = report;
     const hBalancesArr = items
