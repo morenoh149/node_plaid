@@ -1,11 +1,7 @@
-// todo Not finished, need to discuss with Chris
 class Owner {
   constructor(accountRaw) {
-    this.account_id = accountRaw.account_id;
-  }
-
-  get Owners() {
-    return [];
+    this.account_id__c = accountRaw.account_id;
+    this.ownersJsonStructure__c = JSON.stringify(accountRaw.owners);
   }
 }
 

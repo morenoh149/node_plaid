@@ -136,7 +136,7 @@ module.exports = app => {
         plaidProvider.getAssetReportPdf(assetReportToken),
         salesProvider.pushAccountData(assetReportGetResponse),
         salesProvider.pushHisoricalBalanceData(assetReportGetResponse),
-        // salesProvider.pushOwnersData(assetReportGetResponse),
+        salesProvider.pushOwnersData(assetReportGetResponse),
         salesProvider.pushTransactionData(assetReportGetResponse),
       ]);
       // https://github.com/jsforce/jsforce/issues/43

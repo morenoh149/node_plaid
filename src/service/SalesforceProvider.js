@@ -141,7 +141,7 @@ class SalesforceProvider {
       .map(item => {
         const { accounts } = item;
         const owners = accounts.map(acc => new Owner(acc));
-        return owners.map(o => o.Owners).flat(1);
+        return owners.flat(1);
       })
       .flat(1);
     return new Promise((resolve, reject) => {
@@ -167,7 +167,9 @@ class SalesforceProvider {
     const transactionArr = items
       .map(item => {
         const { accounts } = item;
-        return accounts.map(acc => acc.transactions.map(t => new Transaction(t))).flat(1);
+        return accounts
+          .map(acc => acc.transactions.map(t => new Transaction(t)))
+          .flat(1);
       })
       .flat(1);
     return new Promise((resolve, reject) => {
