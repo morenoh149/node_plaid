@@ -170,7 +170,7 @@ class SalesforceProvider {
     return new Promise((resolve, reject) => {
       this.conn
         .sobject('Plaid_Report__c')
-        .create(Report.getReport(report), (err, ret) => {
+        .create(new Report(report), (err, ret) => {
           if (err) {
             return reject(err);
           }
