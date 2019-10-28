@@ -21,9 +21,9 @@ module.exports = app => {
           throw err;
         }
         const { body, files } = req;
-        const { user_id } = body;
-        if (typeof user_id === 'string' && user_id.length) {
-          const ret = await salesProvider.createManualUploadObject(user_id);
+        const { user_id: userId } = body;
+        if (typeof userId === 'string' && userId.length) {
+          const ret = await salesProvider.createManualUploadObject(userId);
           await Promise.all(
             files.map(async file => {
               return salesProvider.uploadFileAsAttachment(
@@ -36,7 +36,7 @@ module.exports = app => {
           );
           return res.json({ success: true, mes: 'File uploaded.' });
         }
-        throw new Error(`Invalid user_id ${user_id}`);
+        throw new Error(`Invalid user_id ${userId}`);
       } catch (e) {
         logger.error(e);
         return res.status(500).json({ error: 'Error uploading file.' });
