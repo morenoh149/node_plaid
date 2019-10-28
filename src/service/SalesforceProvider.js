@@ -55,30 +55,6 @@ class SalesforceProvider {
   }
 
   /**
-   * Upload balance data to salesforce
-   * @param {Array<any>} arr
-   * @returns {Promise<object>}
-   */
-  async balanceData(arr) {
-    const data = arr.accounts.map(acc => {
-      const { account_id, balances } = acc;
-      const { available } = balances;
-      return {
-        account_id__c: account_id,
-        available__c: available,
-      };
-    });
-    return new Promise((resolve, reject) => {
-      this.conn.sobject('Balance__c').create(data, (err, ret) => {
-        if (err) {
-          return reject(err);
-        }
-        return resolve(ret);
-      });
-    });
-  }
-
-  /**
    * Push accounts data to Salesforce
    * @param assetReportGetResponse
    * @returns {Promise<Object>}
