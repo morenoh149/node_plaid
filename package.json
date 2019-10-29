@@ -7,7 +7,8 @@
     "start": "node src/index.js",
     "test": "mocha $(find test -name '*.js')",
     "coverage": "nyc npm test",
-    "coverage:report": "nyc npm test && nyc report --reporter=lcov"
+    "coverage:report": "nyc npm test && nyc report --reporter=lcov",
+    "knex": "knex --knexfile ./src/db/knexfile.js --debug"
   },
   "repository": {
     "type": "git",
@@ -24,10 +25,12 @@
     "env-var": "^5.1.0",
     "express": "^4.17.1",
     "jsforce": "^1.9.2",
+    "knex": "^0.20.0",
     "log4js": "^5.2.2",
     "moment": "^2.24.0",
     "multer": "^1.4.2",
-    "plaid": "^4.3.0"
+    "plaid": "^4.3.0",
+    "sqlite3": "^4.1.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",
@@ -41,7 +44,7 @@
     "nyc": "^14.1.1",
     "prettier": "^1.18.2"
   },
-  "engines" : {
-    "node" : ">=12.0.0"
+  "engines": {
+    "node": ">=12.0.0"
   }
 }

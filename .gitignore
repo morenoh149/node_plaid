@@ -68,3 +68,6 @@ logs/
 
 # Output
 output/
+
+# SQLite database
+/src/db/database.sqlite

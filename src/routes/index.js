@@ -2,6 +2,7 @@ const logger = require('../common/Logger')('src/routes/index.js');
 const ejsRoutes = require('./ejsRoutes');
 const uploadRoute = require('./uploadRoute');
 const Backend = require('../service/Backend');
+const DbProvider = require('../service/DbProvider');
 
 const salesProvider = Backend.SalesProvider;
 const plaidProvider = Backend.PlaidProvider;
@@ -124,6 +125,7 @@ module.exports = app => {
       const { publicToken, userId } = req.body;
       const authResult = await plaidProvider.getAccessToken(publicToken);
       const accessToken = authResult.access_token;
+      await DbProvider.SaveToken(accessToken, userId);
       const assetReportCreateResponse = await plaidProvider.getAssets(
         accessToken
       );
