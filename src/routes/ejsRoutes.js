@@ -24,12 +24,18 @@ module.exports = app => {
   app.set('view engine', 'ejs');
 
   app.get('/', (req, res) => {
-    res.render('index', {
+    res.render('index');
+  });
+
+  app.get('/bind/:userId', (req, res) => {
+    const { userId } = req.params;
+    res.render('bind', {
       title: 'Prototype: Plaid to Salesforce',
       PLAID_PUBLIC_KEY,
       PLAID_ENV,
       PLAID_PRODUCTS,
       PLAID_COUNTRY_CODES,
+      userId,
     });
   });
 

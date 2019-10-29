@@ -119,9 +119,9 @@ module.exports = app => {
     }
   });
 
-  app.get('/assets/data/:publicToken', async (req, res) => {
+  app.post('/assets/data', async (req, res) => {
     try {
-      const { publicToken } = req.params;
+      const { publicToken, userId } = req.body;
       const authResult = await plaidProvider.getAccessToken(publicToken);
       const accessToken = authResult.access_token;
       const assetReportCreateResponse = await plaidProvider.getAssets(

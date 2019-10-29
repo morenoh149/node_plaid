@@ -34,7 +34,7 @@ module.exports = app => {
               );
             })
           );
-          return res.json({ success: true, mes: 'File uploaded.' });
+          return res.redirect('/');
         }
         throw new Error(`Invalid user_id ${userId}`);
       } catch (e) {
