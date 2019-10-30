@@ -20,7 +20,7 @@ const processItem = async dbTokenObject => {
     await Backend.pushAssetsDataFromPlaidToSalesforce(decryptedToken);
     await knex('tokens')
       .update({
-        updated_at: new Date(),
+        updated_at: new Date().toISOString(),
       })
       .where('id', dbTokenObject.id);
   } catch (e) {
@@ -31,7 +31,7 @@ const processItem = async dbTokenObject => {
       await knex('tokens')
         .update({
           isValid: false,
-          updated_at: new Date(),
+          updated_at: new Date().toISOString(),
         })
         .where('id', dbTokenObject.id);
     } else {
