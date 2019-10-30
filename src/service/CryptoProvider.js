@@ -15,6 +15,10 @@ if (CRYPTO_KEY && CRYPTO_IV) {
 }
 
 class CryptoProvider {
+  static isReady() {
+    return cryptoKey && cryptoIv;
+  }
+
   static encrypt(text) {
     if (!cryptoIv || !cryptoKey) {
       logger.warn(WARN_MESSAGE);

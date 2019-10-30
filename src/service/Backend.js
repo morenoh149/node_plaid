@@ -37,6 +37,33 @@ class Backend {
   get PlaidProvider() {
     return this.plaidProvider;
   }
+
+  async pushAssetsDataFromPlaidToSalesforce(token) {
+    const assetReportCreateResponse = await this.plaidProvider.getAssets(token);
+    const assetReportToken = assetReportCreateResponse.asset_report_token;
+    const assetReportGetResponse = await this.plaidProvider.tryToGetAssetReport(
+      assetReportToken
+    );
+    const [ret, assetReportGetPdfResponse] = await Promise.all([
+      this.salesProvider.pushReportData(assetReportGetResponse),
+      this.plaidProvider.getAssetReportPdf(assetReportToken),
+      this.salesProvider.pushAccountData(assetReportGetResponse),
+      this.salesProvider.pushHistoricalBalanceData(assetReportGetResponse),
+      this.salesProvider.pushOwnersData(assetReportGetResponse),
+      this.salesProvider.pushTransactionData(assetReportGetResponse),
+    ]);
+    // https://github.com/jsforce/jsforce/issues/43
+    await this.salesProvider.uploadFileAsAttachment(
+      ret.id,
+      'AssetsReport.pdf',
+      assetReportGetPdfResponse.buffer,
+      'application/pdf'
+    );
+    return {
+      assetReportCreateResponse,
+      assetReportGetResponse,
+    };
+  }
 }
 
 const singleton = new Backend();

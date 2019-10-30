@@ -17,7 +17,7 @@ module.exports = {
   },
   cron: {
     updateAssetsTask: {
-      schedule: '* * * * * *',
+      schedule: '0 0 */180 * * *',
     },
   },
 };

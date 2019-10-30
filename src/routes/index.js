@@ -4,7 +4,6 @@ const uploadRoute = require('./upload');
 const Backend = require('../service/Backend');
 const DbProvider = require('../service/DbProvider');
 
-const salesProvider = Backend.SalesProvider;
 const plaidProvider = Backend.PlaidProvider;
 
 module.exports = app => {
@@ -17,28 +16,9 @@ module.exports = app => {
       const authResult = await plaidProvider.getAccessToken(publicToken);
       const accessToken = authResult.access_token;
       await DbProvider.SaveToken(accessToken, userId);
-      const assetReportCreateResponse = await plaidProvider.getAssets(
-        accessToken
-      );
-      const assetReportToken = assetReportCreateResponse.asset_report_token;
-      const assetReportGetResponse = await plaidProvider.tryToGetAssetReport(
-        assetReportToken
-      );
-      const [ret, assetReportGetPdfResponse] = await Promise.all([
-        salesProvider.pushReportData(assetReportGetResponse),
-        plaidProvider.getAssetReportPdf(assetReportToken),
-        salesProvider.pushAccountData(assetReportGetResponse),
-        salesProvider.pushHistoricalBalanceData(assetReportGetResponse),
-        salesProvider.pushOwnersData(assetReportGetResponse),
-        salesProvider.pushTransactionData(assetReportGetResponse),
-      ]);
-      // https://github.com/jsforce/jsforce/issues/43
-      await salesProvider.uploadFileAsAttachment(
-        ret.id,
-        'AssetsReport.pdf',
-        assetReportGetPdfResponse.buffer,
-        'application/pdf'
-      );
+      const {
+        assetReportGetResponse,
+      } = await Backend.pushAssetsDataFromPlaidToSalesforce(accessToken);
       const result = {
         json: assetReportGetResponse.report,
       };

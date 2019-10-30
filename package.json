@@ -9,7 +9,8 @@
     "coverage": "nyc npm test",
     "coverage:report": "nyc npm test && nyc report --reporter=lcov",
     "knex": "knex --knexfile ./src/db/knexfile.js --debug",
-    "generateCrypto": "node src/service/keysGenerator.js"
+    "generateCrypto": "node src/service/keysGenerator.js",
+    "daemon": "node src/daemon/index.js"
   },
   "repository": {
     "type": "git",
