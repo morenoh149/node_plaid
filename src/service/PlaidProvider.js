@@ -20,7 +20,15 @@ const PLAID_ENV = env
   .required()
   .asString();
 
+/**
+ * How many attempts will try code for getting Report, before throw Error.
+ * @type {number}
+ */
 const MAX_ATTEMP_COUNT = 20;
+/**
+ * Default report parameter.
+ * @type {boolean}
+ */
 const ASSET_REPORT_INCLUDE_INSIGHT = false;
 
 const delay = async (timeout = 1000) => {
@@ -29,7 +37,13 @@ const delay = async (timeout = 1000) => {
   });
 };
 
+/**
+ * Plaid api wrapper.
+ */
 class PlaidProvider {
+  /**
+   * Init client using env variables.
+   */
   constructor() {
     this.client = new plaid.Client(
       PLAID_CLIENT_ID,

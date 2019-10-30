@@ -71,3 +71,6 @@ output/
 
 # SQLite database
 /src/db/database.sqlite
+
+# Documentation (auto generated)
+doc.md

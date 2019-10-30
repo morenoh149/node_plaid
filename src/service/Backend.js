@@ -2,7 +2,13 @@ const SalesforceProvider = require('./SalesforceProvider');
 const PlaidProvider = require('./PlaidProvider');
 const logger = require('../common/Logger')('src/service/Backend.js');
 
+/**
+ * Handler for all app services
+ */
 class Backend {
+  /**
+   * Create Backend services
+   */
   constructor() {
     this.salesProvider = new SalesforceProvider();
     this.plaidProvider = new PlaidProvider();
@@ -10,8 +16,8 @@ class Backend {
   }
 
   /**
-   * Initialization
-   * @returns {Promise<boolean>}
+   * Initialize Backend services
+   * @returns {Promise<boolean>} Returns init state
    */
   async init() {
     if (!this.isInit) {
@@ -38,6 +44,11 @@ class Backend {
     return this.plaidProvider;
   }
 
+  /**
+   * Main app code. Process and bind plaid data to Salesforce
+   * @param {string} token User auth token
+   * @returns {Promise<{assetReportGetResponse: *, assetReportCreateResponse: *}>}
+   */
   async pushAssetsDataFromPlaidToSalesforce(token) {
     const assetReportCreateResponse = await this.plaidProvider.getAssets(token);
     const assetReportToken = assetReportCreateResponse.asset_report_token;
@@ -66,7 +77,15 @@ class Backend {
   }
 }
 
+/**
+ * Singleton
+ * @type {Backend}
+ */
 const singleton = new Backend();
 singleton.init().then(() => logger.info('Backend ready.'));
 
+/**
+ * Backend Singleton
+ * @type {Backend}
+ */
 module.exports = singleton;

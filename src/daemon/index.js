@@ -12,6 +12,11 @@ if (!CryptoProvider.isReady()) {
   logger.warn('Crypto provider is not able to decrypt data (PLAIN MODE)');
 }
 
+/**
+ * Process DbRow of tokens table (filtered by isValid: true)
+ * @param dbTokenObject Database row object
+ * @returns {Promise<void>}
+ */
 const processItem = async dbTokenObject => {
   try {
     logger.debug(`Processing: ${JSON.stringify(dbTokenObject)}`);
@@ -44,6 +49,10 @@ const processItem = async dbTokenObject => {
   logger.debug('Processing finished.');
 };
 
+/**
+ * Cron entry point (invoking by schedule).
+ * @returns {Promise<void>}
+ */
 const main = async () => {
   logger.info('Main: invoked.');
   const validTokens = await knex('tokens')
@@ -58,6 +67,9 @@ const main = async () => {
   }
 };
 
+/**
+ * Cron job
+ */
 const job = new CronJob(
   config.cron.updateAssetsTask.schedule,
   main,

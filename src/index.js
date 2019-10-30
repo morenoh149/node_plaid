@@ -5,6 +5,10 @@ const routes = require('./routes');
 const config = require('./config');
 const logger = require('./common/Logger')('src/index.js');
 
+/**
+ * Express application
+ * @type {app}
+ */
 const app = express();
 
 middleware(app, logger);

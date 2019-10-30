@@ -6,10 +6,17 @@ const DbProvider = require('../service/DbProvider');
 
 const plaidProvider = Backend.PlaidProvider;
 
+/**
+ * Set all Express application routes
+ * @param app Express application
+ */
 module.exports = app => {
   ejs(app);
   uploadRoute(app);
 
+  /**
+   * Main route. Used for binding data from Plaid to Salesforce and connect with userId
+   */
   app.post('/assets/data', async (req, res) => {
     try {
       const { publicToken, userId } = req.body;
@@ -29,6 +36,9 @@ module.exports = app => {
     }
   });
 
+  /**
+   * Custom handler HTTP 404 error.
+   */
   app.use((req, res) => {
     res.status(404);
 

@@ -20,6 +20,9 @@ const SALESFORCE_SECURITY_TOKEN = env
   .required()
   .asString();
 
+/**
+ * Salesforce api wrapper.
+ */
 class SalesforceProvider {
   constructor(options = {}) {
     this.conn = new jsforce.Connection(options);

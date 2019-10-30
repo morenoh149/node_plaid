@@ -1,4 +1,11 @@
+/**
+ * Transaction object for storing data in Salesforce
+ */
 class Transaction {
+  /**
+   * Constructor will use raw Transaction data from plaid assets endpoint
+   * @param tranRaw Raw Transaction Data from plaid assets endpoint
+   */
   constructor(tranRaw) {
     this.account_id__c = tranRaw.account_id;
     this.amount__c = tranRaw.amount;

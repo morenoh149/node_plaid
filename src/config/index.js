@@ -1,4 +1,7 @@
 module.exports = {
+  /**
+   * Logger common configuration
+   */
   log4js: {
     appenders: {
       out: {
@@ -12,10 +15,16 @@ module.exports = {
       },
     },
   },
+  /**
+   * Default express http port
+   */
   express: {
     http_port: 3000,
   },
   cron: {
+    /**
+     * Schedule for daemon task
+     */
     updateAssetsTask: {
       schedule: '0 0 */180 * * *',
     },

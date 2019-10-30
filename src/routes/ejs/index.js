@@ -18,6 +18,10 @@ const PLAID_COUNTRY_CODES = env
   .required()
   .asString();
 
+/**
+ * Set EJS route for HTML responses.
+ * @param app Express application
+ */
 module.exports = app => {
   const SRC_ROOT = path.resolve(__dirname, '..', '..');
   app.set('views', path.join(SRC_ROOT, 'views'));

@@ -4,6 +4,11 @@ const Backend = require('../../service/Backend');
 const salesProvider = Backend.SalesProvider;
 const plaidProvider = Backend.PlaidProvider;
 
+/**
+ * Set common api endpoints for testing Plaid example application (will be removed in future)
+ * @param app Express application
+ * @deprecated Should remove in production
+ */
 module.exports = app => {
   app.post('/get_access_token', async (req, res) => {
     try {

@@ -10,7 +10,8 @@
     "coverage:report": "nyc npm test && nyc report --reporter=lcov",
     "knex": "knex --knexfile ./src/db/knexfile.js --debug",
     "generateCrypto": "node src/service/keysGenerator.js",
-    "daemon": "node src/daemon/index.js"
+    "daemon": "node src/daemon/index.js",
+    "docs": "jsdoc2md $(find src -name '*.js') > doc.md "
   },
   "repository": {
     "type": "git",
@@ -43,6 +44,7 @@
     "eslint-config-prettier": "^6.4.0",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-prettier": "^3.1.1",
+    "jsdoc-to-markdown": "^5.0.2",
     "mocha": "^6.2.2",
     "nyc": "^14.1.1",
     "prettier": "^1.18.2"
