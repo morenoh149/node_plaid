@@ -66,11 +66,11 @@ typings/
 # Script output
 logs/
 
-# Output
-output/
-
 # SQLite database
 /src/db/database.sqlite
 
-# Documentation (auto generated)
+# Documentation (markdown) (auto generated)
 doc.md
+
+# Documentation (html) (auto generated)
+out/
