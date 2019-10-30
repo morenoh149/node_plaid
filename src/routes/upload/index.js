@@ -1,6 +1,6 @@
 const multer = require('multer');
-const logger = require('../common/Logger')('src/routes/uploadRoute.js');
-const Backend = require('../service/Backend');
+const logger = require('../../common/Logger')('src/routes/uploadRoute.js');
+const Backend = require('../../service/Backend');
 
 const salesProvider = Backend.SalesProvider;
 const storage = multer.memoryStorage();

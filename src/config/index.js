@@ -15,4 +15,9 @@ module.exports = {
   express: {
     http_port: 3000,
   },
+  cron: {
+    updateAssetsTask: {
+      schedule: '* * * * * *',
+    },
+  },
 };

@@ -19,7 +19,7 @@ const PLAID_COUNTRY_CODES = env
   .asString();
 
 module.exports = app => {
-  const SRC_ROOT = path.resolve(__dirname, '..');
+  const SRC_ROOT = path.resolve(__dirname, '..', '..');
   app.set('views', path.join(SRC_ROOT, 'views'));
   app.set('view engine', 'ejs');
 
